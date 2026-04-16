@@ -29,6 +29,7 @@ namespace KasomaFlix.Presentation
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            ShutdownMode = ShutdownMode.OnLastWindowClose;
             base.OnStartup(e);
 
             // Configuration
@@ -79,9 +80,22 @@ namespace KasomaFlix.Presentation
             ServiceLocator.SetServiceProvider(_serviceProvider);
 
 
-            // Lancer la fenêtre principale
-            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            mainWindow.Show();
+            // Lancer la fenetre principale
+            try
+            {
+                var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+                MainWindow = mainWindow;
+                mainWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Impossible d'ouvrir la fenetre principale.\n\n" + ex.Message,
+                    "Erreur demarrage",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                Shutdown();
+            }
         }
 
         private void ConfigureServices(IServiceCollection services, IConfiguration configuration)

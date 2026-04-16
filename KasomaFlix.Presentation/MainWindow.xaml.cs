@@ -12,8 +12,13 @@ namespace KasomaFlix.Presentation
         public MainWindow()
         {
             InitializeComponent();
+            // Attendre que la fenetre soit chargee avant de naviguer (sinon le Frame peut rester vide ou planter en silence selon la config)
+            Loaded += MainWindow_Loaded;
+        }
 
-            // Navigation initiale vers la page d'accueil
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= MainWindow_Loaded;
             MainFrame.Navigate(new Views.AccueilCatalogue());
         }
     }
